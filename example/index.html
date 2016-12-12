@@ -1,0 +1,47 @@
+
+<!doctype html>
+<html lang="en-US" class="">
+<script type="text/javascript">
+
+// allow us acces it from console
+var sse ;
+
+sseInit = function() {
+
+    sse =  new EventSource('sse.php');
+    sse.addEventListener('open', function (event) {
+        // channel open
+    });
+
+    sse.addEventListener('message', function (event) {
+        // unmaded event received
+        console.log( JSON.parse(event.data) );
+
+    });
+
+    sse.addEventListener('woz', function (event) {
+        // cusom event received
+        console.log( 'Woz said ',  JSON.parse(event.data) );
+
+    });
+
+    sse.addEventListener('close', function (event) {
+        // channel closed
+        sse.close();
+
+    });
+
+    sse.restart = function() {
+        sse.close();
+        return sseInit();
+    }
+
+    return sse;
+}
+document.addEventListener('DOMContentLoaded', function () {
+
+  sse = sseInit();
+
+}, false);
+</script>
+</html>
